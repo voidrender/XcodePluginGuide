@@ -7,6 +7,8 @@
 //
 
 #import "XcodePluginGuide.h"
+#import "DTXcodeHeaders.h"
+#import "DTXcodeUtils.h"
 
 static XcodePluginGuide *sharedPlugin;
 
@@ -55,12 +57,18 @@ static XcodePluginGuide *sharedPlugin;
     return self;
 }
 
-// Sample Action, for menu item:
 - (void)doMenuAction
 {
-    NSAlert *alert = [[NSAlert alloc] init];
-    [alert setMessageText:@"Hello, World"];
-    [alert runModal];
+    // This is a reference to the current source code editor.
+    DVTSourceTextView *sourceTextView = [DTXcodeUtils currentSourceTextView];
+    // Get the range of the selected text within the source code editor.
+    NSRange selectedTextRange = [sourceTextView selectedRange];
+    // Get the selected text using the range from above.
+    NSString *selectedString = [sourceTextView.textStorage.string substringWithRange:selectedTextRange];
+    if (selectedString) {
+        // Replace the selected string with a comment.
+        [sourceTextView replaceCharactersInRange:selectedTextRange withString:@"// Malkovich Malkovich Malkovich"];
+    }
 }
 
 - (void)dealloc
